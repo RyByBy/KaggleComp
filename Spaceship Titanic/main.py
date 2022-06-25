@@ -84,6 +84,7 @@ X['Transported'] = le.fit_transform(X['Transported'])
 
 '''Creating y '''
 y_train = column_or_1d(X[['Transported']], warn=False)
+
 '''Dropping more useless values'''
 X_train = X.drop(['Cabin','Transported'],axis=1)
 X_test = X_test.drop(['Cabin'],axis=1)
