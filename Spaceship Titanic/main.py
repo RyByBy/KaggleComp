@@ -96,6 +96,5 @@ samples['Transported'] = samples["Transported"].astype(bool)
 samples.to_csv('submission_bagging.csv',index=False)
 
 '''Calculated prediction'''
-print(pred.mean())
-
-print(samples)
+# print(pred.mean())
+# print(samples)
