@@ -59,7 +59,22 @@ X_test['Age'].fillna(X_test['Age'].mean(),inplace=True)
 X['VIP'].fillna(False,inplace=True)
 X_test['VIP'].fillna(False,inplace=True)
 
-'''Transofrming all the word values into numbers + filling rest of values'''
+'''Filling Cabins'''
+for length_cnt, length in enumerate(X['Cabin_deck']):
+    X['Cabin_deck'].fillna('A',inplace=True)
+for length_cnt, length in enumerate(X['Cabin_side']):
+    X['Cabin_side'].fillna('S',inplace=True)
+for length_cnt, length in enumerate(X['Cabin_num']):
+    X['Cabin_num'].fillna(length_cnt)
+#
+for length_cnt, length in enumerate(X_test['Cabin_deck']):
+    X_test['Cabin_deck'].fillna('A',inplace=True)
+for length_cnt, length in enumerate(X_test['Cabin_side']):
+    X_test['Cabin_side'].fillna('S',inplace=True)
+for length_cnt, length in enumerate(X_test['Cabin_num']):
+    X_test['Cabin_num'].fillna(length_cnt)
+
+'''Transofrming all the word values into numbers'''
 X['HomePlanet'] = le.fit_transform(X['HomePlanet'])
 X_test['HomePlanet'] = le.fit_transform(X_test['HomePlanet'])
 X['CryoSleep'] = le.fit_transform(X['CryoSleep'])
@@ -78,9 +93,9 @@ X['Transported'] = le.fit_transform(X['Transported'])
 
 
 '''Checking for missing values'''
-# print(X.isnull().sum())
-# print(X_test.isnull().sum())
-# print(X.head())
+print(X.isnull().sum())
+print(X_test.isnull().sum())
+print(X.head())
 
 '''Creating y '''
 y_train = column_or_1d(X[['Transported']], warn=False)
