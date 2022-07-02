@@ -118,5 +118,3 @@ y_test = samples['Transported']
 samples['Transported'] = pred
 samples['Transported'] = samples["Transported"].astype(bool)
 samples.to_csv('submission.csv',index=False)
-
-'''Kaggle Score:0.79424'''
