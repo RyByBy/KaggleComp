@@ -6,6 +6,8 @@ from sklearn.ensemble import BaggingClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.utils import column_or_1d
 from sklearn.svm import SVC
+import xgboost as xgb
+
 
 le = LabelEncoder()
 pd.set_option('display.max_columns', 3000)
@@ -106,16 +108,17 @@ X_test = X_test.drop(['Cabin'],axis=1)
 
 '''Fitting and predicting'''
 # clf = BaggingClassifier(base_estimator=GaussianNB(), random_state=0)
-clf = AdaBoostClassifier()
+# clf = AdaBoostClassifier()
+clf = xgb.XGBClassifier()
 clf.fit(X_train, y_train)
 pred = clf.predict(X_test)
 samples['Transported'] = pred
 samples['Transported'] = samples["Transported"].astype(bool)
-samples.to_csv('submission_bagging.csv',index=False)
+samples.to_csv('submission.csv',index=False)
 
 # '''Calculated prediction'''
 # print(pred.mean())
 # print(samples)
 
 
-'''Kaggle Score:0.78957'''
+'''Kaggle Score:0.79424'''
