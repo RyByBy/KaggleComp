@@ -104,7 +104,7 @@ y_train = column_or_1d(X[['Transported']], warn=False)
 X_train = X.drop(['Cabin','Transported'],axis=1)
 X_test = X_test.drop(['Cabin'],axis=1)
 
-'''Fitting and predicting into sklearn Bagging Classifier with GNB'''
+'''Fitting and predicting'''
 # clf = BaggingClassifier(base_estimator=GaussianNB(), random_state=0)
 clf = AdaBoostClassifier()
 clf.fit(X_train, y_train)
