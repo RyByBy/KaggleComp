@@ -3,6 +3,7 @@ import pandas as pd
 import os
 
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import BaggingClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -10,7 +11,7 @@ from sklearn.utils import column_or_1d
 from sklearn.svm import SVC
 import xgboost as xgb
 from sklearn.ensemble import GradientBoostingClassifier
-
+from catboost import CatBoostClassifier
 
 
 le = LabelEncoder()
@@ -43,7 +44,7 @@ X_test[['Cabin_deck', 'Cabin_num', 'Cabin_side']] = X_test['Cabin'].str.split('/
 
 
 
-'''Filling missing values with median'''
+'''Filling missing values'''
 X['RoomService'].fillna(X['RoomService'].median(),inplace=True)
 X_test['RoomService'].fillna(X_test['RoomService'].median(),inplace=True)
 X['FoodCourt'].fillna(X['FoodCourt'].median(),inplace=True)
@@ -65,16 +66,20 @@ X_test['Age'].fillna(X_test['Age'].mean(),inplace=True)
 X['VIP'].fillna(False,inplace=True)
 X_test['VIP'].fillna(False,inplace=True)
 
+print(X['Cabin_deck'].value_counts())
+print(X['Cabin_side'].value_counts())
+
+
 '''Filling Cabins'''
 for length_cnt, length in enumerate(X['Cabin_deck']):
-    X['Cabin_deck'].fillna('A',inplace=True)
+    X['Cabin_deck'].fillna('F',inplace=True)
 for length_cnt, length in enumerate(X['Cabin_side']):
     X['Cabin_side'].fillna('S',inplace=True)
 for length_cnt, length in enumerate(X['Cabin_num']):
     X['Cabin_num'].fillna(length_cnt)
 #
 for length_cnt, length in enumerate(X_test['Cabin_deck']):
-    X_test['Cabin_deck'].fillna('A',inplace=True)
+    X_test['Cabin_deck'].fillna('F',inplace=True)
 for length_cnt, length in enumerate(X_test['Cabin_side']):
     X_test['Cabin_side'].fillna('S',inplace=True)
 for length_cnt, length in enumerate(X_test['Cabin_num']):
@@ -104,17 +109,24 @@ print(X_test.isnull().sum())
 print(X.head())
 
 '''Creating y '''
-y_train = column_or_1d(X[['Transported']], warn=False)
+y = column_or_1d(X[['Transported']], warn=False)
 
 '''Dropping more useless values'''
-X_train = X.drop(['Cabin','Transported'],axis=1)
-X_test = X_test.drop(['Cabin'],axis=1)
+train_data = X.drop(['Cabin','Transported'],axis=1)
+test_data = X_test.drop(['Cabin'],axis=1)
+
+'''Testing'''
+X_train, X_val, y_train, y_val = train_test_split(train_data, y, test_size=0.2,random_state=42, stratify=y)
 
 '''Fitting and predicting'''
 clf = GradientBoostingClassifier()
 clf.fit(X_train, y_train)
-pred = clf.predict(X_test)
-y_test = samples['Transported']
-samples['Transported'] = pred
+pred = clf.predict(X_val)
+
+preds_test = clf.predict(test_data)
+samples['Transported'] = preds_test
 samples['Transported'] = samples["Transported"].astype(bool)
 samples.to_csv('submission.csv',index=False)
+
+scores = accuracy_score(y_val, pred)
+print("Accuracy: ",scores)
