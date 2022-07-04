@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
-
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -39,10 +40,62 @@ X_test[['Cabin_deck', 'Cabin_num', 'Cabin_side']] = X_test['Cabin'].str.split('/
 
 # print(X.head())
 
+'''Data visualization'''
+X.hist(bins = 25, figsize = (12, 12))
+# plt.show()
+plt.figure(figsize=(20,15))
+plt.subplot(2,2,1)
+sns.countplot(x = X.HomePlanet, hue = X.Transported, palette="Set2")
+plt.title('Survival figures from different Home Planets', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Number of passengers', fontsize=15)
 
+plt.subplot(2,2,2)
+sns.countplot(x = X.HomePlanet, hue = X.CryoSleep, palette="Set2")
+plt.title('Survival figures from different Home Planets considering cryosleep', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Number of passengers', fontsize=15)
 
+plt.subplot(2,2,3)
+sns.boxplot(x = X.HomePlanet, y = X.Age, hue = X.Transported,  palette="Set2")
+plt.title('Age range and Survival figures from different Home Planets', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Age distribution', fontsize=15)
 
+plt.subplot(2,2,4)
+sns.violinplot(x = X.HomePlanet, y = X.RoomService, hue= X.Transported, palette='Set2')
+plt.title('Room survice expenditure and Survival figures from different Home Planets', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Room service expenditure', fontsize=15)
 
+#2nd set of datas
+
+plt.figure(figsize=(20,15))
+plt.subplot(2,2,1)
+sns.violinplot(x = X.HomePlanet, y = X.ShoppingMall, hue= X.Transported, palette='Set2')
+plt.title('Shopping Mall expenditure and Survival figures from different Home Planets', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Number of passengers', fontsize=15)
+
+plt.subplot(2,2,2)
+sns.violinplot(x = X.HomePlanet, y = X.FoodCourt, hue= X.Transported, palette='Set2')
+plt.title('Food Court expenditure and Survival figures from different Home Planets', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Number of passengers', fontsize=15)
+
+plt.subplot(2,2,3)
+sns.violinplot(x = X.HomePlanet, y = X.Spa, hue= X.Transported, palette='Set2')
+plt.title('Spa expenditure and Survival figures from different Home Planets', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Number of passengers', fontsize=15)
+
+plt.subplot(2,2,4)
+sns.violinplot(x = X.HomePlanet, y = X.VRDeck, hue= X.Transported, palette='Set2')
+plt.title('VRDeck and Survival figures from different Home Planets', fontsize=14)
+plt.xlabel('Home planet', fontsize=15)
+plt.ylabel('Number of passengers', fontsize=15)
+
+plt.show()
 
 '''Filling missing values'''
 X['RoomService'].fillna(X['RoomService'].median(),inplace=True)
@@ -53,10 +106,10 @@ X['ShoppingMall'].fillna(X['ShoppingMall'].median(),inplace=True)
 X_test['ShoppingMall'].fillna(X_test['ShoppingMall'].median(),inplace=True)
 X['Spa'].fillna(X['Spa'].median(),inplace=True)
 X_test['Spa'].fillna(X_test['Spa'].median(),inplace=True)
-X['VRDeck'].fillna(X['VRDeck'].median(),inplace=True)
-X_test['VRDeck'].fillna(X_test['VRDeck'].median(),inplace=True)
-X['CryoSleep'].fillna(X['CryoSleep'].median(),inplace=True)
-X_test['CryoSleep'].fillna(X_test['CryoSleep'].median(),inplace=True)
+X['VRDeck'].fillna(X['VRDeck'].mean(),inplace=True)
+X_test['VRDeck'].fillna(X_test['VRDeck'].mean(),inplace=True)
+X['CryoSleep'].fillna(False,inplace=True)
+X_test['CryoSleep'].fillna(False,inplace=True)
 
 '''Filling missing Age values with mean'''
 X['Age'].fillna(X['Age'].mean(),inplace=True)
